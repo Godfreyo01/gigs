@@ -26,14 +26,16 @@ interface Project {
 }
 
 interface PlatformStats {
-  totalUsers: number;
   totalGigs: number;
   totalProjects: number;
+  freelancers: number;
+  clients: number;
+  totalUsers: number;
 }
 
 export default function Home() {
   const { data: session } = useSession();
-  const [stats, setStats] = useState<PlatformStats>({ totalUsers: 0, totalGigs: 0, totalProjects: 0 });
+  const [stats, setStats] = useState<PlatformStats>({ totalGigs: 0, totalProjects: 0, freelancers: 0, clients: 0, totalUsers: 0 });
   const [recentGigs, setRecentGigs] = useState<Gig[]>([]);
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [statsLoaded, setStatsLoaded] = useState(false);
@@ -83,7 +85,7 @@ export default function Home() {
             <Link href="/gigs">
               <Button size="lg" className="px-8 bg-amber-600 hover:bg-amber-700">Available Tasks</Button>
             </Link>
-            <Link href="/gigs">
+            <Link href="/projects">
               <Button size="lg" variant="outline" className="px-8 border-amber-300 text-amber-700 hover:bg-amber-50">
                 Explore Projects
               </Button>
@@ -91,7 +93,7 @@ export default function Home() {
           </div>
 
           {/* Stats bar — live */}
-          <div className="grid grid-cols-3 gap-6 mt-20 max-w-xl mx-auto">
+          <div className="grid grid-cols-4 gap-6 mt-20 max-w-3xl mx-auto">
             <div>
               <div className="text-3xl font-bold text-amber-600">
                 {!statsLoaded ? <span className="inline-block w-10 h-8 bg-slate-200 rounded animate-pulse" /> : stats.totalGigs}
@@ -100,15 +102,21 @@ export default function Home() {
             </div>
             <div className="border-x border-slate-300">
               <div className="text-3xl font-bold text-blue-600">
-                {!statsLoaded ? <span className="inline-block w-10 h-8 bg-slate-200 rounded animate-pulse" /> : stats.totalProjects}
+                {!statsLoaded ? <span className="inline-block w-10 h-8 bg-slate-200 rounded animate-pulse" /> : stats.freelancers}
               </div>
-              <p className="text-slate-600 text-sm mt-1">Active Projects</p>
+              <p className="text-slate-600 text-sm mt-1">Freelancers</p>
+            </div>
+            <div className="border-x border-slate-300">
+              <div className="text-3xl font-bold text-green-600">
+                {!statsLoaded ? <span className="inline-block w-10 h-8 bg-slate-200 rounded animate-pulse" /> : stats.clients}
+              </div>
+              <p className="text-slate-600 text-sm mt-1">Clients</p>
             </div>
             <div>
               <div className="text-3xl font-bold text-teal-600">
-                {!statsLoaded ? <span className="inline-block w-10 h-8 bg-slate-200 rounded animate-pulse" /> : stats.totalUsers}
+                {!statsLoaded ? <span className="inline-block w-10 h-8 bg-slate-200 rounded animate-pulse" /> : stats.totalProjects}
               </div>
-              <p className="text-slate-600 text-sm mt-1">Students</p>
+              <p className="text-slate-600 text-sm mt-1">Projects</p>
             </div>
           </div>
         </div>
