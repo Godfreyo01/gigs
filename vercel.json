@@ -2,16 +2,5 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "env": {
-    "DATABASE_URL": {
-      "description": "Vercel Postgres connection string from Storage dashboard"
-    },
-    "NEXTAUTH_SECRET": {
-      "description": "Secure random string for NextAuth (generate with: openssl rand -base64 32)"
-    },
-    "NEXTAUTH_URL": {
-      "description": "Your Vercel deployment URL (e.g., https://campus-gigs.vercel.app)"
-    }
-  }
+  "framework": "nextjs"
 }
