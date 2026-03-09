@@ -2,14 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// NOTE: For cloud/production deployment with PostgreSQL, change this to:
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
+// Production: PostgreSQL (for Vercel and cloud deployment)
+// Local dev: Use DATABASE_URL with file:./prisma/dev.db for SQLite
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

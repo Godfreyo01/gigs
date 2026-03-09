@@ -113,9 +113,11 @@ export async function POST(request: NextRequest) {
 
     // Log the actual error for debugging
     console.error("Signup error:", error);
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
 
     // Check if it's a database connection error
     const errorMessage = String(error);
+    
     if (errorMessage.includes("Can't reach database") || errorMessage.includes("ECONNREFUSED")) {
       return NextResponse.json(
         {
@@ -126,8 +128,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Return more detailed error in development
+    const isDevelopment = process.env.NODE_ENV === "development";
+    
     return NextResponse.json(
-      { error: "An error occurred during signup. Please try again later." },
+      {
+        error: "An error occurred during signup. Please try again later.",
+        ...(isDevelopment && { 
+          details: error instanceof Error ? error.message : String(error),
+          stack: isDevelopment && error instanceof Error ? error.stack : undefined,
+        }),
+      },
       { status: 500 }
     );
   }
