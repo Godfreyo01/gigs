@@ -24,15 +24,22 @@ interface Project {
 
 export default function ProjectsPage() {
   const { data: session } = useSession();
+  const [creatorFilter, setCreatorFilter] = useState("");
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  useEffect(() => {
+    const creator = new URLSearchParams(window.location.search).get("creator");
+    setCreatorFilter(creator || "");
+  }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const query = new URLSearchParams();
         if (selectedCategory) query.append("category", selectedCategory);
+        if (creatorFilter) query.append("creator", creatorFilter);
         const res = await fetch(`/api/projects?${query.toString()}`);
         const data = await res.json();
         setProjects(data.projects);
@@ -44,7 +51,7 @@ export default function ProjectsPage() {
     };
 
     fetchProjects();
-  }, [selectedCategory]);
+  }, [selectedCategory, creatorFilter]);
 
   const categories = ["web-app", "mobile", "research", "business", "startup"];
 

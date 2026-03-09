@@ -19,11 +19,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
+    const poster = searchParams.get("poster");
     const status = searchParams.get("status") || "open";
     const skip = parseInt(searchParams.get("skip") || "0");
     const take = parseInt(searchParams.get("take") || "20");
 
-    const where = { ...(category && { category }), status };
+    const where = { ...(category && { category }), ...(poster && { posterId: poster }), status };
 
     const [gigs, total] = await Promise.all([
       prisma.gig.findMany({
@@ -49,7 +50,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching gigs:", error);
     return NextResponse.json({ gigs: [], total: 0, skip: 0, take: 20 });
-    return NextResponse.json({ error: "Failed to fetch gigs" }, { status: 500 });
   }
 }
 

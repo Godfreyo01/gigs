@@ -311,7 +311,7 @@ export default function ProjectDetailPage() {
                 {files.length===0?(
                   <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 text-center">
                     <p className="text-4xl mb-3">📂</p><p className="text-slate-400">No files uploaded yet</p>
-                    {(isOwner||isMember)&&<p className="text-slate-500 text-sm mt-1">Click "Upload File" to share project files</p>}
+                    {(isOwner||isMember)&&<p className="text-slate-500 text-sm mt-1">Click &quot;Upload File&quot; to share project files</p>}
                   </div>
                 ):(
                   <div className="bg-slate-800 border border-slate-700 rounded-xl divide-y divide-slate-700">

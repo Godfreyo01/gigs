@@ -56,6 +56,7 @@ const GIG_CATEGORIES = [
 
 export default function GigsPage() {
   const { data: session } = useSession();
+  const [posterFilter, setPosterFilter] = useState("");
   const [gigs, setGigs] = useState<Gig[]>([]);
   const [filteredGigs, setFilteredGigs] = useState<Gig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,9 +64,17 @@ export default function GigsPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    const poster = new URLSearchParams(window.location.search).get("poster");
+    setPosterFilter(poster || "");
+  }, []);
+
+  useEffect(() => {
     const fetchGigs = async () => {
       try {
-        const res = await fetch(`/api/gigs`);
+        const params = new URLSearchParams();
+        if (posterFilter) params.set("poster", posterFilter);
+        const qs = params.toString();
+        const res = await fetch(`/api/gigs${qs ? `?${qs}` : ""}`);
         const data = await res.json();
         setGigs(data.gigs || []);
       } catch (error) {
@@ -76,7 +85,7 @@ export default function GigsPage() {
     };
 
     fetchGigs();
-  }, []);
+  }, [posterFilter]);
 
   useEffect(() => {
     let filtered = gigs;

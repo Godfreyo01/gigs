@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
+    const creator = searchParams.get("creator");
     const status = searchParams.get("status") || "open";
     const skip = parseInt(searchParams.get("skip") || "0");
     const take = parseInt(searchParams.get("take") || "20");
@@ -34,6 +35,7 @@ export async function GET(request: NextRequest) {
     const where = {
       ...visibilityFilter,
       ...(category && { category }),
+      ...(creator && { createdById: creator }),
       status,
     } as Record<string, unknown>;
 
@@ -59,7 +61,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching projects:", error);
     return NextResponse.json({ projects: [], total: 0, skip: 0, take: 20 });
-    return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });
   }
 }
 
@@ -110,4 +111,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
   }
 }
-

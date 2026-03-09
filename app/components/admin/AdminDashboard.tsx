@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession, signOut } from 'next-auth/react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 interface User {
@@ -25,6 +24,8 @@ interface AdminStats {
   completedGigs: number;
 }
 
+type RoleFilter = 'ALL' | 'FREELANCER' | 'CLIENT' | 'ADMIN';
+
 export default function AdminDashboard() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('overview');
@@ -32,13 +33,9 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filterRole, setFilterRole] = useState<'ALL' | 'FREELANCER' | 'CLIENT' | 'ADMIN'>('ALL');
+  const [filterRole, setFilterRole] = useState<RoleFilter>('ALL');
 
-  useEffect(() => {
-    fetchAdminData();
-  }, [filterRole]);
-
-  const fetchAdminData = async () => {
+  const fetchAdminData = useCallback(async () => {
     try {
       setLoading(true);
       const [statsRes, usersRes] = await Promise.all([
@@ -61,7 +58,11 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterRole]);
+
+  useEffect(() => {
+    fetchAdminData();
+  }, [fetchAdminData]);
 
   const handleDeleteUser = async (userId: string) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
@@ -211,8 +212,8 @@ function UsersTab({
 }: {
   users: User[];
   loading: boolean;
-  filterRole: string;
-  onFilterChange: (role: any) => void;
+  filterRole: RoleFilter;
+  onFilterChange: (role: RoleFilter) => void;
   onDeleteUser: (id: string) => void;
   onApproveAdmin: (id: string) => void;
 }) {
@@ -225,7 +226,7 @@ function UsersTab({
         <select
           id="roleFilter"
           value={filterRole}
-          onChange={e => onFilterChange(e.target.value)}
+          onChange={e => onFilterChange(e.target.value as RoleFilter)}
           className="px-4 py-2 border border-slate-300 rounded-md text-slate-900 focus:outline-none focus:border-amber-500"
         >
           <option value="ALL">All Users</option>

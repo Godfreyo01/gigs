@@ -115,7 +115,7 @@ export default function FreelancerSignupPage() {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-white border border-slate-300 rounded-md text-slate-900 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200"
-                placeholder="John Doe"
+                placeholder="Greg Org"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function FreelancerSignupPage() {
                 value={formData.username}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-white border border-slate-300 rounded-md text-slate-900 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200"
-                placeholder="john_freelancer"
+                placeholder="greg_org"
               />
               <p className="text-slate-600 text-xs mt-1">3+ characters (letters, numbers, _, -)</p>
             </div>

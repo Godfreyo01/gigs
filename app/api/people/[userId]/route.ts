@@ -58,29 +58,32 @@ export async function GET(req: NextRequest, { params }: Params) {
   if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   // Remap field names to match what the client page expects
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const u = user as any;
+  const mappedProjects = user.createdProjects.map((project) => ({
+    ...project,
+    skills: project.skillsNeeded,
+  }));
+
   return NextResponse.json({
     user: {
-      id: u.id,
-      name: u.name,
-      bio: u.bio,
-      avatar: u.avatar,
-      skills: u.skills,
-      university: u.university,
-      major: u.major,
-      yearsOfStudy: u.yearsOfStudy,
-      githubUrl: u.githubUrl,
-      websiteUrl: u.websiteUrl,
-      linkedinUrl: u.linkedinUrl,
-      twitterUrl: u.twitterUrl,
-      createdAt: u.createdAt,
-      gigs: u.postedGigs,
-      projects: u.createdProjects.map((p: any) => ({ ...p, skills: p.skillsNeeded })),
+      id: user.id,
+      name: user.name,
+      bio: user.bio,
+      avatar: user.avatar,
+      skills: user.skills,
+      university: user.university,
+      major: user.major,
+      yearsOfStudy: user.yearsOfStudy,
+      githubUrl: user.githubUrl,
+      websiteUrl: user.websiteUrl,
+      linkedinUrl: user.linkedinUrl,
+      twitterUrl: user.twitterUrl,
+      createdAt: user.createdAt,
+      gigs: user.postedGigs,
+      projects: mappedProjects,
       _count: {
-        postedGigs: u._count.postedGigs,
-        createdProjects: u._count.createdProjects,
-        applications: u._count.gigApplications,
+        postedGigs: user._count.postedGigs,
+        createdProjects: user._count.createdProjects,
+        applications: user._count.gigApplications,
       },
     },
   });

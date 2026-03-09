@@ -111,17 +111,25 @@ export default function DashboardPage() {
               { label: "Projects Joined", value: stats.projects, color: "text-purple-600", href: "/projects" },
               { label: "Applications", value: stats.applications, color: "text-amber-600", href: "/gigs" },
               { label: "Unread Messages", value: stats.unreadMessages, color: "text-rose-600", href: "/messages" },
-              { label: "Notifications", value: stats.notifications, color: "text-blue-600", href: "#" },
-            ].map((s) => (
-              <Link key={s.label} href={s.href}>
-                <div className="bg-white border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors cursor-pointer shadow-sm hover:shadow-md">
+              { label: "Notifications", value: stats.notifications, color: "text-blue-600" },
+            ].map((s) => {
+              const card = (
+                <div className="bg-white border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors shadow-sm hover:shadow-md">
                   <div className={`text-3xl font-bold ${s.color}`}>
                     {isLoading ? <Skeleton /> : s.value}
                   </div>
                   <div className="text-slate-600 text-xs mt-1">{s.label}</div>
                 </div>
-              </Link>
-            ))}
+              );
+
+              return s.href ? (
+                <Link key={s.label} href={s.href} className="cursor-pointer">
+                  {card}
+                </Link>
+              ) : (
+                <div key={s.label}>{card}</div>
+              );
+            })}
           </div>
         </div>
 

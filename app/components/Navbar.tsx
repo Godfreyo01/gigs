@@ -15,7 +15,10 @@ export default function Navbar() {
   const [notifications, setNotifications] = useState<{ id: string; message: string; read: boolean; createdAt: string }[]>([]);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const handleSignOut = () => signOut({ redirect: true, callbackUrl: "/" });
 
@@ -78,10 +81,10 @@ export default function Navbar() {
               Browse Tasks
             </Link>
             <Link
-              href="/gigs"
+              href="/projects"
               className="text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors"
             >
-              Posted Gigs
+              Projects
             </Link>
             <Link
               href="/people"
@@ -226,7 +229,7 @@ export default function Navbar() {
               Browse Tasks
             </Link>
             <Link href="/projects" className="block text-slate-700 hover:text-slate-900 py-2 text-sm" onClick={() => setMenuOpen(false)}>
-              Posted Gigs
+              Projects
             </Link>
             {session ? (
               <>

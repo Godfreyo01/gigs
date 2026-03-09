@@ -183,7 +183,7 @@ export default function PersonProfilePage() {
               <ul className="space-y-3">
                 {user.gigs.map((g) => (
                   <li key={g.id}>
-                    <Link href={`/gigs/${g.id}`} className="group block">
+                    <Link href={`/gig/${g.id}`} className="group block">
                       <p className="text-slate-800 text-sm group-hover:text-blue-600 transition-colors font-medium">{g.title}</p>
                       <p className="text-slate-500 text-xs mt-0.5">${g.budget} · {new Date(g.createdAt).toLocaleDateString()}</p>
                     </Link>

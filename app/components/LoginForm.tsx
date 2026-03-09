@@ -50,7 +50,7 @@ export function LoginForm() {
       }
 
       // The useEffect hook will handle the redirect based on the session
-    } catch (err) {
+    } catch {
       setError("Incorrect credentials");
       setIsLoading(false);
     }

@@ -38,14 +38,6 @@ export default function Home() {
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [statsLoaded, setStatsLoaded] = useState(false);
 
-  const GIG_CATEGORIES = [
-    { group: "Academic Gigs", items: ["Assignment Help", "Research Assistance", "Note Sharing", "Presentation Design"] },
-    { group: "Tech Gigs", items: ["Web Development", "App Development", "Software Debugging", "Database Setup"] },
-    { group: "Creative Gigs", items: ["Digital Works", "Graphic Design", "Video Editing", "Content Writing"] },
-    { group: "Physical Gigs", items: ["Delivery", "House Cleaning", "Moving Help", "Event Setup"] },
-    { group: "Campus Services", items: ["Laptop Repair", "Tutoring", "Resume Review", "Interview Prep"] }
-  ];
-
   useEffect(() => {
     // Fetch live platform stats
     fetch("/api/stats")
@@ -91,7 +83,7 @@ export default function Home() {
             <Link href="/gigs">
               <Button size="lg" className="px-8 bg-amber-600 hover:bg-amber-700">Available Tasks</Button>
             </Link>
-            <Link href="/projects">
+            <Link href="/gigs">
               <Button size="lg" variant="outline" className="px-8 border-amber-300 text-amber-700 hover:bg-amber-50">
                 Explore Projects
               </Button>
@@ -186,7 +178,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-slate-900">Open Projects</h2>
-          <Link href="/gigs" className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
+          <Link href="/projects" className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
             View all →
           </Link>
         </div>

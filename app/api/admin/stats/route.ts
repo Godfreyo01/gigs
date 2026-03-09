@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -9,7 +9,7 @@ async function isAdmin() {
   return session?.user?.role === "ADMIN";
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check if user is admin
     const admin = await isAdmin();

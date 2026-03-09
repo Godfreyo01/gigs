@@ -12,7 +12,7 @@ const messageSchema = z.object({
 });
 
 // GET /api/messages — list all conversations (unique partners) for the current user
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user) {
