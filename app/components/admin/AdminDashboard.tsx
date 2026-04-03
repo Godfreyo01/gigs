@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 
@@ -28,11 +29,13 @@ type RoleFilter = 'ALL' | 'FREELANCER' | 'CLIENT' | 'ADMIN';
 
 export default function AdminDashboard() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [filterRole, setFilterRole] = useState<RoleFilter>('ALL');
 
   const fetchAdminData = useCallback(async () => {
@@ -100,20 +103,36 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+
+    setIsSigningOut(true);
+
+    try {
+      await signOut({ redirect: false });
+      router.replace('/login');
+      router.refresh();
+    } catch (err) {
+      console.error('Sign out failed', err);
+      setIsSigningOut(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">🐝 Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
             <p className="text-slate-600 mt-1">Welcome, {session?.user?.name}</p>
           </div>
           <button
-            onClick={() => signOut({ callbackUrl: '/login' })}
+            onClick={handleSignOut}
+            disabled={isSigningOut}
             className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
           >
-            Logout
+            {isSigningOut ? 'Logging out...' : 'Logout'}
           </button>
         </div>
       </header>

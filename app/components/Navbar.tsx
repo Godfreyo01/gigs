@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
@@ -8,11 +9,13 @@ import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState<{ id: string; message: string; read: boolean; createdAt: string }[]>([]);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -20,7 +23,22 @@ export default function Navbar() {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  const handleSignOut = () => signOut({ redirect: true, callbackUrl: "/" });
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+
+    setIsSigningOut(true);
+    setMenuOpen(false);
+    setShowNotifications(false);
+
+    try {
+      await signOut({ redirect: false });
+      router.replace("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+      setIsSigningOut(false);
+    }
+  };
 
   // Poll unread count every 30 seconds when logged in
   useEffect(() => {
@@ -186,9 +204,10 @@ export default function Navbar() {
                   </Link>
                   <button
                     onClick={handleSignOut}
+                    disabled={isSigningOut}
                     className="text-slate-600 hover:text-slate-900 text-sm transition-colors"
                   >
-                    Sign out
+                    {isSigningOut ? "Signing out..." : "Sign out"}
                   </button>
                 </div>
               </>
@@ -246,8 +265,12 @@ export default function Navbar() {
                 <Link href="/post-gig" className="block text-slate-700 hover:text-slate-900 py-2 text-sm" onClick={() => setMenuOpen(false)}>
                   Post a Task
                 </Link>
-                <button onClick={handleSignOut} className="block text-slate-600 hover:text-slate-900 py-2 text-sm">
-                  Sign out
+                <button
+                  onClick={handleSignOut}
+                  disabled={isSigningOut}
+                  className="block text-slate-600 hover:text-slate-900 py-2 text-sm disabled:opacity-70"
+                >
+                  {isSigningOut ? "Signing out..." : "Sign out"}
                 </button>
               </>
             ) : (
